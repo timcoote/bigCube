@@ -1,0 +1,7 @@
+set xrange [0:3]
+set yrange [0:3]
+set zrange [0:3]
+
+set pointsize 3
+set style line 2 lt 2 lw 6
+splot "p0"  with points pt 2 , "p1" with points pt 3, "p2" with points pt 4, "p3" with points pt 5, "p4" with points pt 6, "p5" with points pt 1, "p6" with points pt 7, "p7" with points pt 8, "p10" with points pt 9
