@@ -10,3 +10,7 @@ gnuplot is broken on F14.
 more fun: psyco has gone from F14. F15 has pypy, but that doesn't support
 numpy! Bottome line, the answers are there, but it wouldn't make sense to 
 rerun the program, I don't think.
+
+Added a git repo and fixed some changes to the point types. 3d plot is not 
+easy to use now as the point styles are in odd colours and the legend
+overlays the image
