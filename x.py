@@ -19,7 +19,7 @@ class Cube (object):
 # create an empty array of the right size, then reshape it
         x = [False for y in range (size ** 3)]
         self.frame = numpy.array (x, dtype = bool)
-#        print self.frame
+#        print (self.frame)
         self.frame.shape = (size, size, size)
         self.blox = []
         self.size = size
@@ -48,7 +48,7 @@ class Cube (object):
             return True
 
     def fill (self, lst):
-        assert (3, len (lst))
+        assert 3 == len (lst), "wrong length of lst to fill: {}".format (len (lst))
 #        self.frame [lst[0], lst[1], lst[2]] = True
 #        self.blox.append (numpy.array ([lst[0], lst [1], lst [2]]))
         return self.fill3 (lst[0], lst [1], lst [2])
@@ -58,7 +58,7 @@ class Cube (object):
         try:
             x = [j.tolist () for j in self.blox]
         except AttributeError:
-            print "bad cubes in blox", self.blox
+            print ("bad cubes in blox", self.blox)
         y = numpy.array (x)
         return y
 
@@ -75,7 +75,7 @@ class Cube (object):
     def __getitem__ (self, key):
 #        return self.frame[key]
 # unsure whether format is consistent here
-#        print "in getitem", key, key.__class__, numpy.mat (key), self.blox
+#        print ("in getitem", key, key.__class__, numpy.mat (key), self.blox)
 
         return key in [j.tolist ()  for j in self.blox]
 
@@ -104,16 +104,16 @@ class BigCube (Cube):
 # should move these down below test
         c = BigCube ()
         c.blox = list (self.blox)
-##        print "v2f", voidToFill, so, loc, voidToFill.__class__, min ([h.min () for h in voidToFill.blox]),max ([h.max () for h in voidToFill.blox])
+##        print ("v2f", voidToFill, so, loc, voidToFill.__class__, min ([h.min () for h in voidToFill.blox]),max ([h.max () for h in voidToFill.blox]))
         if (min ([h.min () for h in voidToFill.blox]) < 0) or (max ([h.max () for h in voidToFill.blox]) > 3):
-##            print "failed min"
+##            print ("failed min")
             return (False, None)
         for cell in voidToFill.blox:
-#            print "filling cell", cell
+#            print ("filling cell", cell)
             if not (c.fill (cell)):
-#                print c
+#                print (c)
                 return (False, None)
-#            print "cell filled"
+#            print ("cell filled")
         return (True, c)
 
 
@@ -206,10 +206,10 @@ class testShape (unittest.TestCase):
         u = Shape ([[0,1,1], [1,0,0], [1,1,0], [1,2,0], [2,0,0], [2,2,0]])
         s1 = m.spitEmOut ().tolist ()
         s2 = n.spitEmOut ().tolist ()
-#        print s1, s2
+#        print (s1, s2)
         s1.sort ()
         s2.sort ()
-#        print s1, s2, (s1 == s2)
+#        print (s1, s2, (s1 == s2))
         self.failUnless (self.s.__cmp__(o))
         self.failIf (self.s.__cmp__(u))
         self.failUnless (m.__cmp__(n))
@@ -234,7 +234,7 @@ class testBigCube (unittest.TestCase):
 
     def testInsert (self):
         (works, result) = self.x.insert (Shapes.shapes[0], [0,0,0])
-        print "test insert", works, result
+        print ("test insert", works, result)
 #        (works, result) = self.x.insert (so, loc)
         pass
 
@@ -263,12 +263,12 @@ def main (argv = None):
     try:
         try:
             opts, args = getopt.getopt (argv [1:], "h", ["help"])
-        except getopt.error, msg:
-            raise Usage (msg)
-#        print opts, args [0]
+        except getopt.error as goe:
+            raise Usage (goe.msg)
+#        print (opts, args [0])
 
 # more code here
-    except Usage, err:
+    except Usage as err:
         print >> sys.stder, err.msg
         print >> sys.stderr, "for help use --help"
         return 2
@@ -298,7 +298,7 @@ def main (argv = None):
                             found = False
                             for x in shapeSet:
                                 if x.__cmp__(s.Rotx (l)):
-#                                    print "found", x, s.Rotx (l)
+#                                    print ("found", x, s.Rotx (l))
                                     found = True
             
                             if not found: shapeSet.append (s.Rotx (l))
@@ -306,17 +306,17 @@ def main (argv = None):
                             s = s.Rotx (l)
                         s = s.Roty (l)
                     s = s.Rotz (l)
-                print len (shapeSet)
+                print (len (shapeSet))
             Stuff.stuff ["%i" % ix] = shapeSet
     
 #            pickle.dump (shapeSet, open ("wibble", "w"))
             pickle.dump (Stuff.stuff, open ("wibble", "w"))
     
     Stuff.stuff = pickle.load (open ("wibble.in", "r"))
-    print Stuff.stuff.keys ()
+    print (Stuff.stuff.keys ())
 
-    print datetime.datetime.now ()
-    print Stuff.stuff ["2"][0]
+    print (datetime.datetime.now ())
+    print (Stuff.stuff ["2"][0])
 
     count = 0
     todo = Stuff.stuff.keys ()
@@ -326,8 +326,8 @@ def main (argv = None):
 # could do this with a guard space
             if (min ([h.min () for h in shapeSet [s].blox]) >=0) and (max ([h.max () for h in shapeSet [s].blox]) <=3):
                 count += 1
-#            print count
-    print "xxx", len (Stuff.stuff [todo [0]])
+#            print (count)
+    print ("xxx", len (Stuff.stuff [todo [0]]))
 
     b = BigCube ()
 
@@ -336,37 +336,37 @@ def main (argv = None):
 
     c = BigCube ()
     d = Shape ([[0,0,2],[0,0,1],[0,0,0],[0,1,2],[0,1,1],[1,0,0]])
-    print c.insert (d, [0,0,0]), d, c
-    print c.insert (Shape ([[0,0,0],[0,1,0],[0,1,-1],[0,2,-1],[0,1,-2],[1,1,-2]]), [0,0,3])
+    print (c.insert (d, [0,0,0]), d, c)
+    print (c.insert (Shape ([[0,0,0],[0,1,0],[0,1,-1],[0,2,-1],[0,1,-2],[1,1,-2]]), [0,0,3]))
 #    for i in Shapes.shapes:
-#         print i
+#         print (i)
 
 def doIt (b, todo, completed):
 
-#    if len (todo) <=2:  print todo, b, b.filled ()
+#    if len (todo) <=2:  print (todo, b, b.filled ())
     if todo == []:
-        print "finished", b.filled ()
+        print ("finished", b.filled ())
         return True
     else:
         lowest = b.min ()
         for x in todo:
 # another loop needed here for each orientation, or a generator
             for y in Stuff.stuff [x]:
-#                print "y, lowest", y, lowest
+#                print ("y, lowest", y, lowest)
                 (worked, a) = b.insert (y, lowest)
                 if worked:
                     todo1 = list (todo)
                     todo1.remove (x)
                     if len (todo) <=2:
                          v = [blah.__str__() for blah in completed.values ()]
-                         print datetime.datetime.now ()
-                         print x, completed.keys (), v, todo, b.filled ()
+                         print (datetime.datetime.now ())
+                         print (x, completed.keys (), v, todo, b.filled ())
 #                        sys.stdout.flush ()
                     comp = completed.copy ()
                     comp [lowest.__str__()] = y
-#                    print "c", completed
+#                    print ("c", completed)
                     if doIt (a, todo1, comp):
-                        print x, y, lowest
+                        print (x, y, lowest)
                         return True
         return False
 
