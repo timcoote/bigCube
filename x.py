@@ -2,7 +2,7 @@ import unittest
 import sys
 import getopt
 import numpy
-import psyco
+#import psyco
 import pickle
 import datetime
 
@@ -183,8 +183,8 @@ class testShape (unittest.TestCase):
         self.s = Shape ([[0,1,0], [1,0,0], [1,1,0], [1,2,0], [2,0,0], [2,2,0]])
 
     def testInit (self):
-        self.failUnless (self.s.filled () == 6)
-        self.failUnless (self.s[1,1,1] == False)
+        self.assertTrue (self.s.filled () == 6)
+        self.assertTrue (self.s[1,1,1] == False)
 
 # redundant?
     def testRot (self):
@@ -192,11 +192,11 @@ class testShape (unittest.TestCase):
 
         x = s.spitEmOut ()
         rotx = numpy.array ([[0,1,0], [-1,0,0], [0,0,1]])
-        self.failUnless (numpy.all (numpy.dot (rotx, x.transpose ()) == numpy.array ([[1,0,1,2,0,2], [0,-1,-1,-1,-2,-2], [0,0,0,0,0,0]])))
+        self.assertTrue (numpy.all (numpy.dot (rotx, x.transpose ()) == numpy.array ([[1,0,1,2,0,2], [0,-1,-1,-1,-2,-2], [0,0,0,0,0,0]])))
 
     def testRotx (self):
-#        self.failUnless (self.s.Rotx (1).__cmp__ (Shape ([[0,0,-1], [1,0,0], [1,0,-1], [1,0,-2], [2,0,0], [2,0,-2]])))
-        self.failUnless (self.s.Rotx (1).__cmp__ (Shape ([[-1,0,-1], [0,0,0], [0,0,-1], [0,0,-2], [1,0,0], [1,0,-2]])))
+#        self.assertTrue (self.s.Rotx (1).__cmp__ (Shape ([[0,0,-1], [1,0,0], [1,0,-1], [1,0,-2], [2,0,0], [2,0,-2]])))
+        self.assertTrue (self.s.Rotx (1).__cmp__ (Shape ([[-1,0,-1], [0,0,0], [0,0,-1], [0,0,-2], [1,0,0], [1,0,-2]])))
 
     def testCmp (self):
         # not working yet as the various sorts don't seem do do what I thought they would
@@ -210,13 +210,13 @@ class testShape (unittest.TestCase):
         s1.sort ()
         s2.sort ()
 #        print (s1, s2, (s1 == s2))
-        self.failUnless (self.s.__cmp__(o))
-        self.failIf (self.s.__cmp__(u))
-        self.failUnless (m.__cmp__(n))
+        self.assertTrue (self.s.__cmp__(o))
+        self.assertFalse (self.s.__cmp__(u))
+        self.assertTrue (m.__cmp__(n))
 
 
     def testTxlate (self):
-        self.failUnless (Shape.__cmp__ (self.s.txlate ([1,2,3]), Shape ([[1,3,3],[2,2,3],[2,3,3],[2,4,3],[3,2,3],[3,4,3]])))
+        self.assertTrue (Shape.__cmp__ (self.s.txlate ([1,2,3]), Shape ([[1,3,3],[2,2,3],[2,3,3],[2,4,3],[3,2,3],[3,4,3]])))
 
 
 class testBigCube (unittest.TestCase):
@@ -229,7 +229,7 @@ class testBigCube (unittest.TestCase):
         #self.fail ("not yet implemented")
 
     def testMin (self):
-        self.failUnless (numpy.all (self.x.min() == numpy.array ([0,0,0])))
+        self.assertTrue (numpy.all (self.x.min() == numpy.array ([0,0,0])))
 # add in void, and check for correct min value
 
     def testInsert (self):
@@ -242,20 +242,20 @@ class testBigCube (unittest.TestCase):
 
 # why are these in testBigCube?
     def testFill (self):
-        self.assert_ (self.x.fill3 (1,1,1))
-        self.assert_ (self.x.fill (numpy.array ([1,2,3])))
-        self.failIf (self.x.fill (numpy.array ([1,1,1])))
-        self.assert_ (not self.x.has (numpy.array ([1,1,0])))
+        self.assertTrue (self.x.fill3 (1,1,1))
+        self.assertTrue (self.x.fill (numpy.array ([1,2,3])))
+        self.assertFalse (self.x.fill (numpy.array ([1,1,1])))
+        self.assertTrue (not self.x.has (numpy.array ([1,1,0])))
 
     def testSpitEmOut (self):
         s = Shape ([[0,1,0], [1,0,0], [1,1,0], [1,2,0], [2,0,0], [2,2,0]])
-        self.failUnless (s.__cmp__(Shape ([[0,1,0], [1,0,0], [1,1,0], [1,2,0], [2,0,0], [2,2,0]])))
+        self.assertTrue (s.__cmp__(Shape ([[0,1,0], [1,0,0], [1,1,0], [1,2,0], [2,0,0], [2,2,0]])))
 
 class Usage (Exception):
     def __init__ (self, msg):
         self.msg = msg
 
-psyco.full ()
+#psyco.full ()
 
 def main (argv = None):
     if argv is None:
@@ -312,7 +312,7 @@ def main (argv = None):
 #            pickle.dump (shapeSet, open ("wibble", "w"))
             pickle.dump (Stuff.stuff, open ("wibble", "w"))
     
-    Stuff.stuff = pickle.load (open ("wibble.in", "r"))
+    Stuff.stuff = pickle.load (open ("wibble.in", "rb"), encoding='latin1')
     print (Stuff.stuff.keys ())
 
     print (datetime.datetime.now ())
@@ -327,7 +327,7 @@ def main (argv = None):
             if (min ([h.min () for h in shapeSet [s].blox]) >=0) and (max ([h.max () for h in shapeSet [s].blox]) <=3):
                 count += 1
 #            print (count)
-    print ("xxx", len (Stuff.stuff [todo [0]]))
+    print ("xxx", len (Stuff.stuff [list (todo) [0]]))
 
     b = BigCube ()
 
